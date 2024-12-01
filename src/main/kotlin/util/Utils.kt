@@ -3,7 +3,7 @@ package util
 import java.nio.file.Path
 import kotlin.math.abs
 
-fun readInput(name: String) = Path.of("test", "resources", "$name.txt").toFile()
+fun readInput(name: String) = Path.of("src", "test", "kotlin", "resources", "$name.txt").toFile()
     .readLines()
 
 infix fun <E> Set<E>.overlaps(otherSet: Set<E>): Boolean = this.any { otherSet.contains(it) }
