@@ -2,7 +2,7 @@
 
 | Puzzle                                                            | Solution                                    | LOC  | Themes                            |
 |-------------------------------------------------------------------|---------------------------------------------|------|-----------------------------------|
-| [Day 1 - Historian Hysteria](https://adventofcode.com/2024/day/1) | [Day 1 solution](src/main/kotlin/Day01.kt)  | 30   | Add and sort numbers in two lists |
+| [Day 1 - Historian Hysteria](https://adventofcode.com/2024/day/1) | [Day 1 solution](src/main/kotlin/Day01.kt)  | 19   | Add and sort numbers in two lists |
 | [Day 2 - TBD](https://adventofcode.com/2024/day/2)                | [Day 2 solution](src/main/kotlin/Day02.kt)  | TODO | TODO                              |
 | [Day 3 - TBD](https://adventofcode.com/2024/day/3)                | [Day 3 solution](src/main/kotlin/Day03.kt)  | TODO | TODO                              |
 | [Day 4 - TBD](https://adventofcode.com/2024/day/4)                | [Day 4 solution](src/main/kotlin/Day04.kt)  | TODO | TODO                              |
