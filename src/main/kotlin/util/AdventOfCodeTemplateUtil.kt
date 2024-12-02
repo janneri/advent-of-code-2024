@@ -17,13 +17,13 @@ object AdventOfCodeTemplateUtil {
     private const val YEAR = 2024
     private const val SRC_DIR = "src/main/kotlin" // DayN.kt is created to this directory
     private const val TEST_DIR = "src/test/kotlin" // DayNTest.kt is created to this directory
-    private val testResourcesDir = Path.of("test", "resources") // Input is downloaded here
+    private val testResourcesDir = Path.of("src", "test", "kotlin", "resources") // Input is downloaded here
     // Session id for an authenticated download should be placed here:
     private val aocSessionFile = File(System.getProperty("user.home"),".adventofcode.session")
 
     @JvmStatic
     fun main(args: Array<String>) {
-        createDay(1)
+        createDay(2)
     }
 
     private fun createDay(dayNum: Int) {
