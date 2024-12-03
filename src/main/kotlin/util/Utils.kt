@@ -6,6 +6,9 @@ import kotlin.math.abs
 fun readInput(name: String) = Path.of("src", "test", "kotlin", "resources", "$name.txt").toFile()
     .readLines()
 
+fun readInputText(name: String) = Path.of("src", "test", "kotlin", "resources", "$name.txt").toFile()
+    .readText()
+
 infix fun <E> Set<E>.overlaps(otherSet: Set<E>): Boolean = this.any { otherSet.contains(it) }
 
 fun sumN(n: Long): Long = n * (n + 1) / 2

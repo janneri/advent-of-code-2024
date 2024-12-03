@@ -1,19 +1,15 @@
 // See puzzle in https://adventofcode.com/2024/day/3
 
-class Day03(inputLines: List<String>) {
-    private val input = inputLines.reduce { acc, s -> acc + s }
-    private val linePattern = """mul\(\d+,\d+\)""".toRegex()
-    private val mulPattern = """^mul\((\d+),(\d+)\)$""".toRegex()
+class Day03(private val input: String) {
+    private val instructionRegex = """mul\((\d+),(\d+)\)""".toRegex()
 
-    data class Multiply(val left: Int, val right: Int, val index: Int)
+    data class Multiply(val left: Int, val right: Int, val position: Int)
 
     private fun findInstructions(str: String): List<Multiply> =
-        linePattern.findAll(str).toList().map {
-            val instructionStr = it.value
-            val (left, right) = mulPattern.find(instructionStr)!!.destructured
-            val idx = str.indexOf("mul($left,$right)")
-            Multiply(left.toInt(), right.toInt(), idx)
-        }
+        instructionRegex.findAll(str).map { match ->
+            val (left, right) = match.destructured
+            Multiply(left.toInt(), right.toInt(), match.range.first)
+        }.toList()
 
     private fun findAllOccurrences(input: String, substring: String): List<Int> =
         Regex(substring).findAll(input)
@@ -28,8 +24,8 @@ class Day03(inputLines: List<String>) {
 
         return findInstructions(input)
             .filter { multiplyInstruction ->
-                val closestDo: Int = doPositions.findLast { it < multiplyInstruction.index } ?: 0
-                val closestDont: Int = dontPositions.findLast { it < multiplyInstruction.index } ?: -1
+                val closestDo: Int = doPositions.findLast { it < multiplyInstruction.position } ?: 0
+                val closestDont: Int = dontPositions.findLast { it < multiplyInstruction.position } ?: -1
                 closestDo > closestDont
             }
             .sumOf { it.left * it.right }
