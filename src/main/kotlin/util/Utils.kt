@@ -130,6 +130,11 @@ data class Coord(val x: Int, val y: Int): Comparable<Coord> {
             this.move(direction, steps)
         }
 
+    fun moveCollect(direction: IDirection, amount: Int = 1): List<Coord> =
+        (0 .. amount).map { steps ->
+            this.move(direction, steps)
+        }
+
     fun moveUntil(direction: Direction, predicate: (Coord) -> Boolean): Coord {
         val maxMoves = 10000
         var newCoord = this

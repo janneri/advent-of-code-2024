@@ -23,7 +23,7 @@ object AdventOfCodeTemplateUtil {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        createDay(3)
+        createDay(4)
     }
 
     private fun createDay(dayNum: Int) {

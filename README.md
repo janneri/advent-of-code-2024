@@ -5,7 +5,7 @@
 | [Day 1 - Historian Hysteria](https://adventofcode.com/2024/day/1) | [Day 1 solution](src/main/kotlin/Day01.kt)  | 19   | Add and sort numbers in two lists                                                  |
 | [Day 2 - Red-Nosed Reports](https://adventofcode.com/2024/day/2)  | [Day 2 solution](src/main/kotlin/Day02.kt)  | 24   | Check that a list of numbers is either increasing or decreasing by a limited delta |
 | [Day 3 - Mull It Over](https://adventofcode.com/2024/day/3)       | [Day 3 solution](src/main/kotlin/Day03.kt)  | 33   | Regex fun                                                                          |
-| [Day 4 - TBD](https://adventofcode.com/2024/day/4)                | [Day 4 solution](src/main/kotlin/Day04.kt)  | TODO | TODO                                                                               |
+| [Day 4 - TBD](https://adventofcode.com/2024/day/4)                | [Day 4 solution](src/main/kotlin/Day04.kt)  | 38   | Read XMAS strings and string combinations in all directions in a grid              |
 | [Day 5 - TBD](https://adventofcode.com/2024/day/5)                | [Day 5 solution](src/main/kotlin/Day05.kt)  | TODO | TODO                                                                               |
 | [Day 6 - TBD](https://adventofcode.com/2024/day/6)                | [Day 6 solution](src/main/kotlin/Day06.kt)  | TODO | TODO                                                                               |
 | [Day 7 - TBD](https://adventofcode.com/2024/day/7)                | [Day 7 solution](src/main/kotlin/Day07.kt)  | TODO | TODO                                                                               |
