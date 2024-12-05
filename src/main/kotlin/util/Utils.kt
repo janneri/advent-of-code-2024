@@ -9,9 +9,15 @@ fun readInput(name: String) = Path.of("src", "test", "kotlin", "resources", "$na
 fun readInputText(name: String) = Path.of("src", "test", "kotlin", "resources", "$name.txt").toFile()
     .readText()
 
+fun parseSections(input: String, delimeter: String = "\n\n"): List<List<String>> =
+    input.split(delimeter)
+        .map { it.split("\n") }
+
 infix fun <E> Set<E>.overlaps(otherSet: Set<E>): Boolean = this.any { otherSet.contains(it) }
 
 fun sumN(n: Long): Long = n * (n + 1) / 2
+
+fun <T> List<T>.middleValue(): T = this[size / 2]
 
 private val numPattern = """-?[0-9]+""".toRegex()
 fun parseInts(str: String): List<Int> =
