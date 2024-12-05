@@ -8,24 +8,25 @@ class Day04(inputLines: List<String>) {
         line.mapIndexed { x, char -> Coord(x, y) to char }
     }.toMap()
 
-    private val width = tiles.keys.maxBy { it.x }.x
-    private val height = tiles.keys.maxBy { it.y }.y
+    private val maxX = tiles.keys.maxBy { it.x }.x
+    private val maxY = tiles.keys.maxBy { it.y }.y
     private val validCorners = setOf("MSMS", "MMSS", "SMSM", "SSMM")
 
-    private fun collectWords(fromCoord: Coord): List<String> {
-        return IDirection.entries.map { direction ->
-            val dirCoords = fromCoord.moveCollect(direction, 3).filter { it in tiles }
-            dirCoords.fold("") { acc, c -> acc + tiles[c] }
+    private fun collectWords(fromCoord: Coord): List<String> =
+        IDirection.entries.map { direction ->
+            fromCoord.moveCollect(direction, 3)
+                .mapNotNull { tiles[it] }
+                .joinToString("")
         }
-    }
 
-    fun part1(): Int = tiles.keys.filter { tiles[it] == 'X' }
-        .sumOf { coord ->
-            collectWords(coord).count { it == "XMAS" }
+    fun part1(): Int = tiles.keys
+        .filter { tiles[it] == 'X' }
+        .sumOf { fromCoord ->
+            collectWords(fromCoord).count { it == "XMAS" }
         }
 
     fun part2(): Int = tiles.keys
-        .filter { tiles[it] == 'A' && it.x in 1..<width && it.y in 1..<height }
+        .filter { tiles[it] == 'A' && it.x in 1..<maxX && it.y in 1..<maxY }
         .count { coord ->
             val cornerChars = listOf(
                 tiles[Coord(coord.x - 1, coord.y - 1)],

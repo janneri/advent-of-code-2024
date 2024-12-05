@@ -115,6 +115,12 @@ data class LongCoord(val x: Long, val y: Long) {
 data class Coord(val x: Int, val y: Int): Comparable<Coord> {
     fun neighbors(): List<Coord> = Direction.values().map { this.move(it) }
     fun neighborsIncludingDiagonal(): Set<Coord> = IDirection.values().map { this.move(it) }.toSet()
+    fun corners(): List<Coord> = listOf(
+        Coord(this.x - 1, this.y - 1),
+        Coord(this.x + 1, this.y - 1),
+        Coord(this.x - 1, this.y + 1),
+        Coord(this.x + 1, this.y + 1)
+    )
 
     fun distanceTo(c: Coord): Int = abs(this.x - c.x) + abs(this.y - c.y)
 
@@ -180,6 +186,22 @@ fun drawGrid(coords: Set<Coord>, tileSymbolAt: (Coord) -> Char) {
             print(tileSymbolAt(coord))
         }
         println()
+    }
+}
+
+data class Grid(val width: Int, val height: Int, val tileMap: Map<Coord, Char>) {
+    operator fun get(coord: Coord): Char? = tileMap[coord]
+    operator fun contains(coord: Coord): Boolean = tileMap.containsKey(coord)
+    fun coords(): Set<Coord> = tileMap.keys.toSet()
+
+    companion object {
+        fun of(lines: List<String>): Grid {
+            val tiles: Map<Coord, Char> = lines.flatMapIndexed { y, line ->
+                line.mapIndexed { x, char -> Coord(x, y) to char }
+            }.toMap()
+
+            return Grid(lines[0].length, lines.size, tiles)
+        }
     }
 }
 
