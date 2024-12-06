@@ -193,6 +193,7 @@ data class Grid(val width: Int, val height: Int, val tileMap: Map<Coord, Char>) 
     operator fun get(coord: Coord): Char? = tileMap[coord]
     operator fun contains(coord: Coord): Boolean = tileMap.containsKey(coord)
     fun coords(): Set<Coord> = tileMap.keys.toSet()
+    fun findCoords(char: Char): Set<Coord> = tileMap.filterValues { it == char }.keys.toSet()
 
     companion object {
         fun of(lines: List<String>): Grid {
