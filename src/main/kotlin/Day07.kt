@@ -11,10 +11,12 @@ class Day07(inputLines: List<String>) {
     private fun multiply(a: Long, b: Long): Long = a * b
     private fun join(a: Long, b: Long): Long = "$a$b".toLong()
 
-    private fun isTruthyEquation(result: Long, numbers: List<Long>, operators: List<(Long, Long) -> Long>): Boolean {
-        if (numbers.size == 1) {
-            return numbers.first() == result
-        }
+    private fun isTruthyEquation(result: Long,
+                                 numbers: List<Long>,
+                                 operators: List<(Long, Long) -> Long>
+    ): Boolean {
+        if (numbers.size == 1) return numbers.first() == result
+
         return operators.any { operation ->
             val newNumbers = listOf(operation(numbers[0], numbers[1])) + numbers.drop(2)
             isTruthyEquation(result, newNumbers, operators)

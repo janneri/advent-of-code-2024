@@ -8,7 +8,7 @@
 | [Day 4 - Ceres Search](https://adventofcode.com/2024/day/4)          | [Day 4 solution](src/main/kotlin/Day04.kt)  | 38   | Read XMAS strings and string combinations in all directions in a grid                     |
 | [Day 5 - Print Queue](https://adventofcode.com/2024/day/5)           | [Day 5 solution](src/main/kotlin/Day05.kt)  | 35   | Filter and order number lists by a set of ordering rules                                  |
 | [Day 6 - Guard Gallivant](https://adventofcode.com/2024/day/6)       | [Day 6 solution](src/main/kotlin/Day06.kt)  | 45   | Move around a grid. Only turn right and move forward. Find loops and count visited cells. |
-| [Day 7 - Bridge Repair](https://adventofcode.com/2024/day/7)         | [Day 7 solution](src/main/kotlin/Day07.kt)  | 32   | Calculations: addition, multiplication, joining                                           |
+| [Day 7 - Bridge Repair](https://adventofcode.com/2024/day/7)         | [Day 7 solution](src/main/kotlin/Day07.kt)  | 34   | Calculations: addition, multiplication, joining                                           |
 | [Day 8 - Resonant Collinearity](https://adventofcode.com/2024/day/8) | [Day 8 solution](src/main/kotlin/Day08.kt)  | 47   | Move in line to find positions in a grid                                                  |
 | [Day 9 - TBD](https://adventofcode.com/2024/day/9)                   | [Day 9 solution](src/main/kotlin/Day09.kt)  | TODO | TODO                                                                                      |
 | [Day 10 - TBD](https://adventofcode.com/2024/day/10)                 | [Day 10 solution](src/main/kotlin/Day10.kt) | TODO | TODO                                                                                      |
