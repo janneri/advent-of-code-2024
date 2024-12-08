@@ -137,6 +137,9 @@ data class Coord(val x: Int, val y: Int): Comparable<Coord> {
     fun move(direction: Direction, amount: Int = 1) =
         Coord(x + amount * direction.dx, y + amount * direction.dy)
 
+    fun move(xDiff: Int, yDiff: Int) =
+        Coord(x + xDiff, y + yDiff)
+
     fun moveCollect(direction: Direction, amount: Int = 1): List<Coord> =
         (0 .. amount).map { steps ->
             this.move(direction, steps)
@@ -170,6 +173,11 @@ data class Coord(val x: Int, val y: Int): Comparable<Coord> {
     )
 }
 
+data class Line(val start: Coord, val end: Coord) {
+    val xDiff: Int get() = end.x - start.x
+    val yDiff: Int get() = end.y - start.y
+}
+
 typealias Path = List<Coord>
 
 infix fun Any.log(n: Int) {
@@ -194,6 +202,8 @@ data class Grid(val width: Int, val height: Int, val tileMap: Map<Coord, Char>) 
     operator fun contains(coord: Coord): Boolean = tileMap.containsKey(coord)
     fun coords(): Set<Coord> = tileMap.keys.toSet()
     fun findCoords(char: Char): Set<Coord> = tileMap.filterValues { it == char }.keys.toSet()
+    fun findCoordsByTile(predicate: (Char) -> Boolean): Set<Coord> =
+        tileMap.filterValues { predicate(it) }.keys.toSet()
 
     companion object {
         fun of(lines: List<String>): Grid {
