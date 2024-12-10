@@ -11,7 +11,7 @@
 | [Day 7 - Bridge Repair](https://adventofcode.com/2024/day/7)         | [Day 7 solution](src/main/kotlin/Day07.kt)  | 34   | Calculations: addition, multiplication, joining                                           |
 | [Day 8 - Resonant Collinearity](https://adventofcode.com/2024/day/8) | [Day 8 solution](src/main/kotlin/Day08.kt)  | 47   | Move in line to find positions in a grid                                                  |
 | [Day 9 - Disk Fragmenter](https://adventofcode.com/2024/day/9)       | [Day 9 solution](src/main/kotlin/Day09.kt)  | 103  | Rearrange disk bits: manipulate list of ints by swapping digits like crazy.               |
-| [Day 10 - TBD](https://adventofcode.com/2024/day/10)                 | [Day 10 solution](src/main/kotlin/Day10.kt) | TODO | TODO                                                                                      |
+| [Day 10 - Hoof It](https://adventofcode.com/2024/day/10)             | [Day 10 solution](src/main/kotlin/Day10.kt) | 42   | Find all distinct paths in a grid.                                                        |
 | [Day 11 - TBD](https://adventofcode.com/2024/day/11)                 | [Day 11 solution](src/main/kotlin/Day11.kt) | TODO | TODO                                                                                      |
 | [Day 12 - TBD](https://adventofcode.com/2024/day/12)                 | [Day 12 solution](src/main/kotlin/Day12.kt) | TODO | TODO                                                                                      |
 | [Day 13 - TBD](https://adventofcode.com/2024/day/13)                 | [Day 13 solution](src/main/kotlin/Day13.kt) | TODO | TODO                                                                                      |

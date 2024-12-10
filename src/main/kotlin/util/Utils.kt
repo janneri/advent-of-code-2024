@@ -113,8 +113,8 @@ data class LongCoord(val x: Long, val y: Long) {
 }
 
 data class Coord(val x: Int, val y: Int): Comparable<Coord> {
-    fun neighbors(): List<Coord> = Direction.values().map { this.move(it) }
-    fun neighborsIncludingDiagonal(): Set<Coord> = IDirection.values().map { this.move(it) }.toSet()
+    fun neighbors(): List<Coord> = Direction.entries.map { this.move(it) }
+    fun neighborsIncludingDiagonal(): Set<Coord> = IDirection.entries.map { this.move(it) }.toSet()
     fun corners(): List<Coord> = listOf(
         Coord(this.x - 1, this.y - 1),
         Coord(this.x + 1, this.y - 1),
@@ -139,6 +139,12 @@ data class Coord(val x: Int, val y: Int): Comparable<Coord> {
 
     fun move(xDiff: Int, yDiff: Int) =
         Coord(x + xDiff, y + yDiff)
+
+    operator fun plus(other: Coord): Coord =
+        Coord(x + other.x, y + other.y)
+
+    operator fun minus(other: Coord): Coord =
+        Coord(x - other.x, y - other.y)
 
     fun moveCollect(direction: Direction, amount: Int = 1): List<Coord> =
         (0 .. amount).map { steps ->
@@ -197,18 +203,26 @@ fun drawGrid(coords: Set<Coord>, tileSymbolAt: (Coord) -> Char) {
     }
 }
 
-data class Grid(val width: Int, val height: Int, val tileMap: Map<Coord, Char>) {
-    operator fun get(coord: Coord): Char? = tileMap[coord]
+data class Grid<T>(val width: Int, val height: Int, val tileMap: Map<Coord, T>) {
+    operator fun get(coord: Coord): T? = tileMap[coord]
     operator fun contains(coord: Coord): Boolean = tileMap.containsKey(coord)
     fun coords(): Set<Coord> = tileMap.keys.toSet()
-    fun findCoords(char: Char): Set<Coord> = tileMap.filterValues { it == char }.keys.toSet()
-    fun findCoordsByTile(predicate: (Char) -> Boolean): Set<Coord> =
+    fun findCoords(tile: T): Set<Coord> = tileMap.filterValues { it == tile }.keys.toSet()
+    fun findCoordsByTile(predicate: (T) -> Boolean): Set<Coord> =
         tileMap.filterValues { predicate(it) }.keys.toSet()
 
     companion object {
-        fun of(lines: List<String>): Grid {
+        fun of(lines: List<String>): Grid<Char> {
             val tiles: Map<Coord, Char> = lines.flatMapIndexed { y, line ->
                 line.mapIndexed { x, char -> Coord(x, y) to char }
+            }.toMap()
+
+            return Grid(lines[0].length, lines.size, tiles)
+        }
+
+        fun ofInts(lines: List<String>): Grid<Int> {
+            val tiles: Map<Coord, Int> = lines.flatMapIndexed { y, line ->
+                line.mapIndexed { x, char -> Coord(x, y) to char.digitToInt() }
             }.toMap()
 
             return Grid(lines[0].length, lines.size, tiles)
