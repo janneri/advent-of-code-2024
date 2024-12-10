@@ -8,7 +8,7 @@ class Day10(inputLines: List<String>) {
 
     private fun solve(start: Coord, countDistinctEndpoints: Boolean = false): Int {
         val queue = ArrayDeque<Set<Coord>>()
-        queue.add(mutableSetOf(start))
+        queue.add(setOf(start))
         val distinctPaths = mutableSetOf<Set<Coord>>()
 
         while (queue.isNotEmpty()) {
