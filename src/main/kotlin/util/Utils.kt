@@ -206,7 +206,8 @@ fun drawGrid(coords: Set<Coord>, tileSymbolAt: (Coord) -> Char) {
 data class Grid<T>(val width: Int, val height: Int, val tileMap: Map<Coord, T>) {
     operator fun get(coord: Coord): T? = tileMap[coord]
     operator fun contains(coord: Coord): Boolean = tileMap.containsKey(coord)
-    fun coords(): Set<Coord> = tileMap.keys.toSet()
+    fun coords(): Set<Coord> = tileMap.keys
+    fun coordsWithout(coord: Coord): Set<Coord> = tileMap.keys.filter { it != coord }.toSet()
     fun findCoords(tile: T): Set<Coord> = tileMap.filterValues { it == tile }.keys.toSet()
     fun findCoordsByTile(predicate: (T) -> Boolean): Set<Coord> =
         tileMap.filterValues { predicate(it) }.keys.toSet()
