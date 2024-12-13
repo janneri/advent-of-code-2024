@@ -258,3 +258,10 @@ fun <T> List<T>.permutations() =
             item1 to item2
         }
     }
+
+fun <T> List<T>.combinations(): List<Pair<T, T>> =
+    this.flatMap { item1 ->
+        this.map { item2 ->
+            item1 to item2
+        }
+    }

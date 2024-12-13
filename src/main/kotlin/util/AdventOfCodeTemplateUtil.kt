@@ -12,9 +12,12 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.time.Duration
 
+enum class InputType { GRID, TEXT, SECTIONS, LINES }
 
 object AdventOfCodeTemplateUtil {
     private const val YEAR = 2024
+    private const val DAYNUM = 13
+    private val inputType = InputType.SECTIONS
     private const val SRC_DIR = "src/main/kotlin" // DayN.kt is created to this directory
     private const val TEST_DIR = "src/test/kotlin" // DayNTest.kt is created to this directory
     private val testResourcesDir = Path.of("src", "test", "kotlin", "resources") // Input is downloaded here
@@ -23,19 +26,32 @@ object AdventOfCodeTemplateUtil {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        createDay(12)
+        createDay()
     }
 
-    private fun createDay(dayNum: Int) {
+    private fun createDay() {
         val dir = Path.of(SRC_DIR)
-        val dayPrefix = String.format("Day%02d", dayNum)
+        val dayPrefix = String.format("Day%02d", DAYNUM)
         val mainFile = dir.resolve("${dayPrefix}.kt").toFile()
+
+        val inputParam = when (inputType) {
+            InputType.TEXT -> "input: String"
+            InputType.SECTIONS -> "input: String"
+            else -> "inputLines: List<String>"
+        }
+        val firstVariable = when (inputType) {
+            InputType.GRID -> "private val grid = Grid.of(inputLines)"
+            InputType.SECTIONS -> "private val inputSections = parseSections(input)"
+            else -> ""
+        }
 
         println("Creating ${mainFile.name}")
         Files.writeString(mainFile.toPath(), """
-        // See puzzle in https://adventofcode.com/$YEAR/day/$dayNum
+        // See puzzle in https://adventofcode.com/$YEAR/day/$DAYNUM
         
-        class $dayPrefix(val inputLines: List<String>) {
+        class $dayPrefix($inputParam) {
+            $firstVariable
+            
             fun part1(): Int {
                 return 0
             }
@@ -49,8 +65,15 @@ object AdventOfCodeTemplateUtil {
         val testSrcDir = Path.of(TEST_DIR)
         val mainTestFile = testSrcDir.resolve("${dayPrefix}Test.kt").toFile()
         println("Creating ${mainTestFile.name}")
+
+        val readFunction = when (inputType) {
+            InputType.TEXT -> "readInputText"
+            InputType.SECTIONS -> "readInputText"
+            else -> "readInput"
+        }
         Files.writeString(mainTestFile.toPath(), """
             import util.readInput
+            import util.readInputText
             import kotlin.test.Test
             import kotlin.test.assertEquals
             import kotlin.test.assertTrue
@@ -58,25 +81,25 @@ object AdventOfCodeTemplateUtil {
             class ${dayPrefix}Test {
                 @Test
                 fun part1_test() {
-                    val result = ${dayPrefix}(readInput("${dayPrefix}_test")).part1()
+                    val result = ${dayPrefix}($readFunction("${dayPrefix}_test")).part1()
                     assertEquals(2, result)
                 }
 
                 @Test
                 fun part1_real() {
-                    val result = ${dayPrefix}(readInput("$dayPrefix")).part1()
+                    val result = ${dayPrefix}($readFunction("$dayPrefix")).part1()
                     assertEquals(2, result)
                 }
                 
                 @Test
                 fun part2_test() {
-                    val result = ${dayPrefix}(readInput("${dayPrefix}_test")).part2()
+                    val result = ${dayPrefix}($readFunction("${dayPrefix}_test")).part2()
                     assertEquals(2, result)
                 }
 
                 @Test
                 fun part2_real() {
-                    val result = ${dayPrefix}(readInput("$dayPrefix")).part2()
+                    val result = ${dayPrefix}($readFunction("$dayPrefix")).part2()
                     assertEquals(2, result)
                 }
             }
@@ -86,7 +109,7 @@ object AdventOfCodeTemplateUtil {
         Files.createDirectories(testResourcesDir)
         testResourcesDir.resolve("${dayPrefix}_test.txt").toFile().createNewFile()
         val inputTxtFile = testResourcesDir.resolve("$dayPrefix.txt").toFile()
-        Files.writeString(inputTxtFile.toPath(), downloadInput(dayNum))
+        Files.writeString(inputTxtFile.toPath(), downloadInput(DAYNUM))
         println("Input downloaded to ${inputTxtFile.toPath()}")
     }
 
