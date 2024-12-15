@@ -171,6 +171,12 @@ data class Coord(val x: Int, val y: Int): Comparable<Coord> {
         throw IllegalArgumentException("Too many (> $maxMoves) moves!")
     }
 
+    fun teleport(gridWidth: Int, gridHeight: Int): Coord =
+        Coord(
+            if (x < 0) gridWidth + x else x % gridWidth,
+            if (y < 0) gridHeight + y else y % gridHeight
+        )
+
     override fun toString() = "($x, $y)"
 
     override fun compareTo(other: Coord) = compareValuesBy(this, other,
@@ -203,9 +209,14 @@ fun drawGrid(coords: Set<Coord>, tileSymbolAt: (Coord) -> Char) {
     }
 }
 
-data class Grid<T>(val width: Int, val height: Int, val tileMap: Map<Coord, T>) {
+data class Grid<T>(val width: Int,
+                   val height: Int,
+                   val tileMap: Map<Coord, T>
+) {
     operator fun get(coord: Coord): T? = tileMap[coord]
     operator fun contains(coord: Coord): Boolean = tileMap.containsKey(coord)
+
+    fun centerCoord() = Coord(width / 2, height / 2)
     fun coords(): Set<Coord> = tileMap.keys
     fun coordsWithout(coord: Coord): Set<Coord> = tileMap.keys.filter { it != coord }.toSet()
     fun findCoords(tile: T): Set<Coord> = tileMap.filterValues { it == tile }.keys.toSet()
@@ -227,6 +238,13 @@ data class Grid<T>(val width: Int, val height: Int, val tileMap: Map<Coord, T>) 
             }.toMap()
 
             return Grid(lines[0].length, lines.size, tiles)
+        }
+
+        fun generate(width: Int, height: Int): Grid<Char> {
+            return Grid(width, height, (0..<height)
+                .flatMap { y ->
+                    (0..<width).map { x -> Coord(x, y) to '.'}
+                }.toMap())
         }
     }
 }
