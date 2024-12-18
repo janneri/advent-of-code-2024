@@ -183,6 +183,11 @@ data class Coord(val x: Int, val y: Int): Comparable<Coord> {
         { it.y },
         { it.x }
     )
+
+    companion object {
+        fun of(input: String): Coord = input.split(",")
+            .let { (x, y) -> Coord(x.trim().toInt(), y.trim().toInt()) }
+    }
 }
 
 data class Line(val start: Coord, val end: Coord) {
