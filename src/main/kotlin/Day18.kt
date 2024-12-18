@@ -5,38 +5,31 @@ import java.util.*
 // See puzzle in https://adventofcode.com/2024/day/18
 
 class Day18(inputLines: List<String>) {
-    private val wallCoords = inputLines.map { line -> Coord.of(line) }
+    private val wallCoords = inputLines.map { Coord.of(it) }
 
-    private data class PathWithCost(
-        val path: Set<Coord>,
-        val pos: Coord,
-        val cost: Int
-    ) : Comparable<PathWithCost> {
-        override fun compareTo(other: PathWithCost): Int = this.cost - other.cost
-    }
-
-    private fun findPath(start: Coord, end: Coord, walls: Set<Coord>): PathWithCost? {
+    private fun findPath(start: Coord, end: Coord, walls: Set<Coord>): Int? {
         val seen = mutableSetOf<Coord>()
-        val queue = PriorityQueue<PathWithCost>().apply { add(PathWithCost(emptySet(), start, 0)) }
+        val queue = PriorityQueue<Pair<Coord, Int>>(compareBy { it.second })
+        queue.add(start to 0)
         val validRange = 0..end.x
 
         while (queue.isNotEmpty()) {
-            val current = queue.poll()
-            if (current.pos == end) return current
+            val (currentPos, cost) = queue.poll()
+            if (currentPos == end) return cost
 
-            if (seen.add(current.pos)) {
-                current.pos.neighbors()
+            if (seen.add(currentPos)) {
+                currentPos.neighbors()
                     .filter { it.x in validRange && it.y in validRange && it !in walls && it !in seen }
-                    .forEach { queue.add(PathWithCost(current.path + it, it, current.cost + 1)) }
+                    .forEach { neighbor -> queue.add(neighbor to cost + 1) }
             }
         }
         return null
     }
 
-    private fun findPath(gridSize: Int, wallCount: Int): PathWithCost? =
+    private fun findPath(gridSize: Int, wallCount: Int): Int? =
         findPath(Coord(0, 0), Coord(gridSize - 1, gridSize - 1), wallCoords.take(wallCount).toSet())
 
-    fun part1(gridSize: Int, wallCount: Int): Int = findPath(gridSize, wallCount)!!.cost
+    fun part1(gridSize: Int, wallCount: Int): Int = findPath(gridSize, wallCount) ?: -1
 
     fun part2(gridSize: Int): String {
         var low = 0
