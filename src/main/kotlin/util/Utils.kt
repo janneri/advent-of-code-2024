@@ -1,6 +1,7 @@
 package util
 
 import java.nio.file.Path
+import java.util.*
 import kotlin.math.abs
 
 fun readInput(name: String) = Path.of("src", "test", "kotlin", "resources", "$name.txt").toFile()
@@ -61,6 +62,7 @@ enum class Direction(val dx: Int, val dy: Int, val symbol: Char, val letter: Cha
     abstract fun turnLeft(): Direction
     abstract fun turnRight(): Direction
     fun turnOpposite() = turnLeft().turnLeft()
+    fun symbolStr() = symbol.toString()
 
     companion object {
         fun ofLetter(letter: Char): Direction =
@@ -229,6 +231,52 @@ data class Grid<T>(val width: Int,
 
     fun findCoordsByTile(predicate: (T) -> Boolean): Set<Coord> =
         tileMap.filterValues { predicate(it) }.keys.toSet()
+
+    fun findPath(start: Coord, end: Coord, walls: Set<Coord>): util.Path? {
+        val seen = mutableSetOf<Coord>()
+        val queue = PriorityQueue<util.Path>(compareBy { it.size }).apply { add(listOf(start)) }
+
+        while (queue.isNotEmpty()) {
+            val path = queue.poll()
+            val currentPos = path.last()
+
+            if (currentPos == end) return path
+
+            if (seen.add(currentPos)) {
+                currentPos.neighbors()
+                    .filter { it !in walls && it !in seen }
+                    .forEach { queue.add(path + it) }
+            }
+        }
+        return null
+    }
+
+    fun findAllShortestPaths(start: Coord, end: Coord, walls: Set<Coord>): List<util.Path> {
+        val queue = PriorityQueue<util.Path>(compareBy { it.size }).apply { add(listOf(start)) }
+        val shortestPaths = mutableListOf<util.Path>()
+        var shortestPathLength = Int.MAX_VALUE
+
+        while (queue.isNotEmpty()) {
+            val path = queue.poll()
+            val currentPos = path.last()
+
+            if (path.size > shortestPathLength) break
+
+            if (currentPos == end) {
+                if (path.size < shortestPathLength) {
+                    shortestPathLength = path.size
+                    shortestPaths.clear()
+                }
+                shortestPaths.add(path)
+            } else {
+                currentPos.neighbors()
+                    .filter { it !in walls && (it !in path) }
+                    .forEach { queue.add(path + it) }
+            }
+        }
+
+        return shortestPaths
+    }
 
     companion object {
         fun of(lines: List<String>): Grid<Char> {
