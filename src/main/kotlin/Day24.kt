@@ -38,12 +38,9 @@ class Day24(input: String) {
         while (!hasAllValues) {
             hasAllValues = true
             gates.forEach { gate ->
-                val output = gate.findOutput(wires)
-                if (output != null) {
-                    wires[gate.out] = output
-                }
-                else {
-                    hasAllValues = false
+                when (val output = gate.findOutput(wires)) {
+                    null -> hasAllValues = false
+                    else -> wires[gate.out] = output
                 }
             }
         }
