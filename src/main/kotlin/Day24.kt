@@ -13,8 +13,8 @@ class Day24(input: String) {
     private val gates = inputSections[1].map { str ->
         str.split(" ").let { Gate(it[0], it[1], it[2], it[4]) }
     }
-    private
-    data class Gate(val in1: String, val op: String, val in2: String, val out: String) {
+
+    private data class Gate(val in1: String, val op: String, val in2: String, val out: String) {
         fun findOutput(wires: Map<String, Int>): Int? = when {
             out in wires -> wires[out]!!
             in1 !in wires || in2 !in wires -> null
@@ -23,21 +23,14 @@ class Day24(input: String) {
             op == "XOR" -> wires[in1]!!.xor(wires[in2]!!)
             else -> throw Error("Invalid op")
         }
-    }
 
-    fun part11(): Long {
-        while (gates.any { it.findOutput(wires) != null }) {
-            gates.forEach { gate ->
-                gate.findOutput(wires)?.let { wires[gate.out] = it }
-            }
-        }
+        fun getsInputFrom(other: Gate): Boolean = in1 == other.out || in2 == other.out
 
-        val bitString = wires.keys
-            .filter { it.startsWith("z") }
-            .sortedDescending()
-            .joinToString(separator = "") { wires[it].toString() }
+        fun hasNoXYInputs(): Boolean =
+            listOf(in1, in2).none { it.startsWith("x") || it.startsWith("y") }
 
-        return bitString.toLong(2)
+        fun inputIdsEqual(id: String) =
+            (in1 == "x$id" && in2 == "y$id") || (in1 == "y$id" && in2 == "x$id")
     }
 
     private fun solveWires() {
@@ -56,74 +49,42 @@ class Day24(input: String) {
         }
     }
 
-    private fun findBitStr(letter: String): String {
-        val keys = wires.keys.filter { it.startsWith(letter) }.sortedDescending()
-        val bitStr = keys.fold("") { acc, s ->
-            acc + wires[s]!!
-        }
-        return bitStr
-    }
+    private fun findBitStr(char: Char): String = wires.keys
+        .filter { it.startsWith(char) }
+        .sortedDescending()
+        .joinToString(separator = "") { wires[it].toString() }
 
     fun part1(): Long {
         solveWires()
-        val bitStr = findBitStr("z")
-        return bitStr.toLong(2)
-    }
-
-    private fun print() {
-        val bitStrX = findBitStr("x")
-        val bitStrY = findBitStr("y")
-        val bitStrZ = findBitStr("z")
-        val sum = bitStrX.toLong(2) + bitStrY.toLong(2)
-        println("X: " + bitStrX + " " + bitStrX.toLong(2))
-        println("Y: " + bitStrY + " " + bitStrY.toLong(2))
-        println("Z: " + bitStrZ + " " + bitStrZ.toLong(2))
-        println("=  " + sum.toString(2) + " " + sum)
+        return findBitStr('z').toLong(2)
     }
 
     fun part2(): String {
-        // See the rules of full-adder circuit:
-        // https://www.build-electronic-circuits.com/full-adder/
-        val BIT_LENGTH = 45
+        val incorrect = (0..44).fold(mutableListOf<String>()) { acc, idx ->
+            val id = idx.toString().padStart(2, '0')
 
-        val incorrect = mutableListOf<String>()
-        for (i in 0 until BIT_LENGTH) {
-            val id = i.toString().padStart(2, '0')
+            // Find full adder circuit gates
+            val xor1 = gates.find { it.inputIdsEqual(id) && it.op == "XOR" }!!
+            val xor2 = gates.find { it.out == "z$id" }!!
+            val and1 = gates.find { it.inputIdsEqual(id) && it.op == "AND" }!!
+            val xor2OrAnd2 = gates.find { it.getsInputFrom(xor1) }
+            val or = gates.find { it.getsInputFrom(and1) }
 
-            val xor1 = gates.find {
-                ((it.in1 == "x$id" && it.in2 == "y$id") || (it.in1 == "y$id" && it.in2 == "x$id")) && it.op == "XOR"
-            }
+            // Validate gate outputs:
+            if (xor2.op != "XOR") acc.add(xor2.out)
+            if (or != null && or.op != "OR" && idx > 0) acc.add(and1.out)
+            if (xor2OrAnd2 != null && xor2OrAnd2.op !in setOf("XOR", "AND")) acc.add(xor1.out)
 
-            val and1 = gates.find {
-                ((it.in1 == "x$id" && it.in2 == "y$id") || (it.in1 == "y$id" && it.in2 == "x$id")) && it.op == "AND"
-            }
-            val z = gates.find { it.out == "z$id" }
-
-            if (xor1 == null || and1 == null || z == null) continue
-
-            // each z must be connected to an XOR
-            if (z.op != "XOR") incorrect.add(z.out)
-
-            // each AND must go to an OR (besides the first case as it starts the carry flag)
-            val or = gates.find { it.in1 == and1.out || it.in2 == and1.out }
-            if (or != null && or.op != "OR" && i > 0) incorrect.add(and1.out)
-
-            // the first XOR must go to XOR or AND
-            val after = gates.find { it.in1 == xor1.out || it.in2 == xor1.out }
-            if (after != null && after.op == "OR") incorrect.add(xor1.out)
+            acc
         }
 
-        // each XOR must be connected to an x, y, or z
-        incorrect.addAll(
-            gates.filter {
-                !it.in1.startsWith("x") && !it.in1.startsWith("y") &&
-                        !it.in2.startsWith("x") && !it.in2.startsWith("y") &&
-                        !it.out.startsWith("z") && it.op == "XOR"
-            }.map { it.out }
-        )
+        val misplacedXorOutputs = gates
+            .filter { it.op == "XOR" }
+            .filter { gate -> gate.hasNoXYInputs() && !gate.out.startsWith("z") }
+            .map { it.out }
 
-        val result = incorrect.sorted().joinToString(separator = ",")
-        println(result)
-        return result
+        incorrect.addAll(misplacedXorOutputs)
+
+        return incorrect.sorted().joinToString(separator = ",")
     }
 }
